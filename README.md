@@ -11,5 +11,6 @@ Adicionado estilos próprios
 ## Tecnologias utilizadas
 * ``HTML / CSS``
 * ``JavaScript``
+* ``TypeScript``
 
 *Alteração em notas já criadas ainda não ficam salvas.*

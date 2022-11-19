@@ -1,7 +1,14 @@
 // Elements
-const notesContainer = document.querySelector('#notes-container');
-const noteInput = document.querySelector('#note-content');
-const addNoteBtn = document.querySelector('#add-note-btn');
+const notesContainer = document.querySelector('#notes-container') as HTMLDivElement
+const noteInput = document.querySelector('#note-content') as HTMLInputElement ;
+const addNoteBtn = document.querySelector('#add-note-btn') as HTMLButtonElement;
+
+// Types
+type NoteType = {
+    id: number;
+    content: string;
+    fixed: boolean
+}
 
 // Funções
 function generateId() {
@@ -11,18 +18,19 @@ function generateId() {
 function showNotes() {
     cleanNotes()
 
-    getNotes().forEach((note) => {
+    getNotes().forEach((note: NoteType) => {
         const noteElement = createNote(note.id, note.content, note.fixed);
         notesContainer.appendChild(noteElement);
     });
 }
 
+
 function cleanNotes() {
-    notesContainer.replaceChildren([])
+    notesContainer.replaceChildren(`${[]}`)
 }
 
 function addNote() {
-    const noteObject = {
+    const noteObject: NoteType = {
         id: generateId(),
         content: noteInput.value,
         fixed: false,
@@ -38,7 +46,7 @@ function addNote() {
     noteInput.value = '';
 }
 
-function createNote(id, content, fixed) {
+function createNote(id: number, content: string, fixed?: boolean) {
     const textarea = document.createElement('textarea');
     textarea.value = content;
     textarea.placeholder = 'Adicione algum texto...'
@@ -65,40 +73,40 @@ function createNote(id, content, fixed) {
 
     // Eventos do elemento
 
-    element.querySelector('.bi-pin-angle-fill').addEventListener('click', () => {
+    element.querySelector('.bi-pin-angle-fill')!.addEventListener('click', () => {
         toggleFixNote(id)
     });
 
-    element.querySelector('.bi-x-lg').addEventListener('click', () => {
+    element.querySelector('.bi-x-lg')!.addEventListener('click', () => {
         deleteNote(id, element)
     });
 
-    element.querySelector('.bi-file-earmark-plus-fill').addEventListener('click', () => {
+    element.querySelector('.bi-file-earmark-plus-fill')!.addEventListener('click', () => {
         copyNote(id);
     });
 
     return element;
 }
 
-function toggleFixNote(id) {
+function toggleFixNote(id: number) {
     const notes = getNotes();
-    const targetNote = notes.filter((note) => note.id === id)[0];
+    const targetNote = notes.filter((note: NoteType) => note.id === id)[0];
     targetNote.fixed = !targetNote.fixed;
 
     saveNotes(notes);
     showNotes();
 }
 
-function deleteNote(id, element) {
-    const notes = getNotes().filter((note) => note.id !== id)
+function deleteNote(id: number, element: HTMLDivElement) {
+    const notes = getNotes().filter((note: NoteType) => note.id !== id)
     saveNotes(notes)
 
     notesContainer.removeChild(element)
 }
 
-function copyNote(id) {
+function copyNote(id: number) {
     const notes = getNotes();
-    const targetNote = notes.filter((note) => note.id === id)[0];
+    const targetNote = notes.filter((note: NoteType) => note.id === id)[0];
 
     const noteObject = {
         id: generateId(),
@@ -118,12 +126,12 @@ function copyNote(id) {
 function getNotes() {
     const notes = JSON.parse(localStorage.getItem('notes') || '[]');
 
-    const orderedNotes = notes.sort((a, b) => (a.fixed > b.fixed ? -1 : 1))
+    const orderedNotes = notes.sort((a: NoteType, b: NoteType) => (a.fixed > b.fixed ? -1 : 1))
 
     return orderedNotes;
 }
 
-function saveNotes(notes) {
+function saveNotes(notes: NoteType[]) {
     localStorage.setItem("notes", JSON.stringify(notes))
 }
 
